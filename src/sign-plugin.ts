@@ -11,6 +11,8 @@ import SignProtocolABI from "./abis/SignProtocol";
 export type SignProtocolContract = Contract<typeof SignProtocolABI>;
 
 const contractAddreses: Record<number, string> = {
+  8453: "0x2b3224D080452276a76690341e5Cfa81A945a985", //base mainnet
+  204: "0x03688D459F172B058d39241456Ae213FC4E26941", // opbnb mainnet
   1: "0x3D8E699Db14d7781557fE94ad99d93Be180A6594", // ethereum mainnet
   137: "0xe2C15B97F628B7Ad279D6b002cEDd414390b6D63", // polygon mainnet
   534352: "0xFBF614E89Ac79d738BaeF81CE6929897594b7E69", // scroll mainnet
@@ -32,6 +34,19 @@ export class SignProtocolPlugin extends Web3PluginBase {
     return param;
   }
 
+  /**
+   * This method returns a SignProtocolContract instance of connected chain
+   * @param address - contract address
+   * @returns SignProtocolContract instance
+   * @throws Error if invalid address
+   * @example
+   * ```ts
+   * const web3 = new Web3("http://127.0.0.1:8545");
+   * web3.registerPlugin(new SignProtocolPlugin());
+   *const signProtocolContract = web3.sp.getContract("0x...");
+   * ```
+   */
+
   public getContract(address: string): SignProtocolContract {
     if (!validator.isAddress(address)) {
       throw new Error("SignProtocolPlugin: Invalid contract address");
@@ -41,6 +56,20 @@ export class SignProtocolPlugin extends Web3PluginBase {
     return contract;
   }
 
+  /**
+   * This method returns the Sign Protocol contract address of given chainId.
+   * if chainId is not provided, it will get the contract address for the connected chain
+   * @param chainId - chainId to get the contract address for
+   * @returns contract address
+   * @throws Error if unsupported chainId
+   * @example
+   * ```ts
+   * const web3 = new Web3("https://rpc.ankr.com/eth")
+   * web3.registerPlugin(new SignProtocolPlugin());
+   * const contractAddress = await web3.sp.getContractAddress(); // gets contract address of connected chain
+   * ```
+   */
+
   public async getContractAddress(chainId?: number): Promise<string> {
     if (!chainId) {
       chainId = await eth.getChainId(this, {
@@ -48,7 +77,6 @@ export class SignProtocolPlugin extends Web3PluginBase {
         bytes: FMT_BYTES.HEX
       });
     }
-    // Do some logic to get the contract address
     const contractAddress = contractAddreses[chainId];
     if (!contractAddress)
       throw new Error(`SignProtocolPlugin: Unsupported chainId ${chainId}`);

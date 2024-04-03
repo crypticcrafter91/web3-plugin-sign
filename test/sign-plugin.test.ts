@@ -9,7 +9,7 @@ describe("SignProtocolPlugin Tests", () => {
     web3.registerPlugin(new SignProtocolPlugin());
 
     expect(web3.sp).toBeInstanceOf(SignProtocolPlugin);
-    expect(web3.sp.pluginNamespace).toBe("example");
+    expect(web3.sp.pluginNamespace).toBe("sp");
     expect(web3.sp.someMethod).toBeInstanceOf(Function);
     expect(web3.sp.getContract).toBeInstanceOf(Function);
     expect(web3.sp.getContractAddress).toBeInstanceOf(Function);
