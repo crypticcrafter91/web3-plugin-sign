@@ -30,10 +30,6 @@ const contractAddreses: Record<number, string> = {
 export class SignProtocolPlugin extends Web3PluginBase {
   public pluginNamespace = "sp";
 
-  public someMethod(param: string): string {
-    return param;
-  }
-
   /**
    * This method returns a SignProtocolContract instance of connected chain
    * @param address - contract address
