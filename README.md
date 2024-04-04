@@ -1,6 +1,6 @@
 # Sign Protocol Web3 Plugin
 
-This plugin is a web3.js plugin for the Sign Protocol. It allows you to interact with the Sign Protocol using web3.js.
+This plugin is a web3.js plugin for the Sign Protocol. It allows you to interact with the [Sign Protocol](https://sign.global/) using web3.js.
 
 ## Installation
 
@@ -16,7 +16,7 @@ npm install web3-plugin-sign web3@latest --save
 import Web3 from "web3";
 import { SignProtocolPlugin } from "web3-plugin-sign";
 
-const web3 = new Web3("https://rpc.ankr.com/eth");
+const web3 = new Web3("https://rpc.ankr.com/scroll"); // any rpc url
 web3.registerPlugin(new SignProtocolPlugin());
 
 // Get the contract address of the Sign Protocol for the current network
@@ -49,6 +49,73 @@ const attestation = await signProtocolContract.methods.getAttestation(1).call();
 console.log("attestation:", attestation);
 ```
 
+### Register Schema
+
+```ts
+const schemaData = JSON.stringify({
+  name: "user schema",
+  description: "user schema",
+  data: [
+    {
+      name: "name",
+      type: "string"
+    },
+    {
+      name: "age",
+      type: "uint8"
+    },
+    {
+      name: "country",
+      type: "string"
+    },
+    {
+      name: "isStudent",
+      type: "bool"
+    }
+  ]
+});
+const schemaRequest = {
+  registrant: "0x88eb4a509C756Ff69bA0eB73bC88212441dCa84e",
+  revocable: true, // whether the schema is revocable
+  dataLocation: 0, // 0 for on-chain, 1 for arweave, 2 for ipfs, 3 for custom
+  maxValidFor: 0, // 0 for valid forever
+  hook: "0x00000...", // optional
+  data: schemaData // raw schema data
+};
+
+const tx = await signProtocolContract.methods.registerSchema(schema).send({
+  from: account
+});
+```
+
+Refer [Schema Docs](https://docs.sign.global/developer-apis/index-2/index/index-1/schema) for more information.
+
+### Attest
+
+```ts
+const encodedData = web3.eth.abi.encodeParameters(
+  ["string", "uint8", "string", "bool"], // schema data types
+  ["Alice", 25, "USA", true] // schema data values
+ );
+
+const attestationRequest = {
+  schemaID: 1, // schema id that the attestation is based on
+  linkedAttestationId: 0, // if current attestation is linked previous attestation
+  data: encodedData // encoded attestation data based on schema
+  validUntil: 0, // 0 for valid forever
+  revoked: false, // whether the attestation is revoked
+  recipients:[] // list of recipients
+  attester: account, // attester address
+  dataLocation: 0, // 0 for on-chain, 1 for arweave, 2 for ipfs, 3 for custom
+};
+
+const tx = await signProtocolContract.methods.attest(attestationRequest).send({
+  from: account
+});
+```
+
+Refer [Attestation Docs](https://docs.sign.global/developer-apis/index-2/index/index/isp#attest-1) for more information.
+
 Refer to the [Sign Protocol Contract documentation](https://docs.sign.global/developer-apis/index-2/index/index/isp) for more information.
 
 ### Publishing
@@ -64,6 +131,8 @@ npm publish
 ## References
 
 - [Sign Protocol Documentation](https://docs.sign.global/)
+- [Sign Protocol Schema](https://docs.sign.global/developer-apis/index-2/index/index-1/schema#schema)
+- [Sign Protocol Attestation](https://docs.sign.global/developer-apis/index-2/index/index/isp#attest-1)
 - [Web3.js Plugin Documentation](https://docs.web3js.org/guides/web3_plugin_guide/)
 
 ## Safety
