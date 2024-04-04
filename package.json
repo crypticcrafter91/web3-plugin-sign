@@ -4,7 +4,7 @@
   "description": "Web3.js plugin for Sign Protocol",
   "license": "MIT",
   "main": "dist/index.js",
-  "types": "dist/example-plugin.d.ts",
+  "types": "dist/sign-plugin.d.ts",
   "scripts": {
     "test": "jest --config=./test/jest.config.js",
     "build": "tsc"
