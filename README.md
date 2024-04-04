@@ -2,6 +2,12 @@
 
 This plugin is a web3.js plugin for the Sign Protocol. It allows you to interact with the [Sign Protocol](https://sign.global/) using web3.js.
 
+### Features
+
+- Get the contract address of the Sign Protocol for the current network or a specific chain ID.
+- Schema Registrations
+- Attestations
+
 ## Installation
 
 ```bash

@@ -1,6 +1,6 @@
 {
   "name": "web3-plugin-sign",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Web3.js plugin for Sign Protocol",
   "license": "MIT",
   "main": "dist/index.js",
